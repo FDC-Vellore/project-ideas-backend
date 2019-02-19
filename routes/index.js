@@ -14,16 +14,17 @@ router.get('/', function(req, res, next) {
 });
 
 //this route for idea submission
-router.post("/idea/submission/", (req,res)=>{
+router.post('/idea/submission/', (req,res)=>{
+    console.log(req.body);
     let data = {
-        name : req.sanitize((req.body.name).trim()),
-        title : req.sanitize((req.body.title).trim()),
-        desc: req.sanitize((req.body.desc).trim()),
-        club : req.sanitize((req.body.club).trim())
+        title: req.sanitize(req.body.title),
+        desc: req.sanitize(req.body.desc),
+        club: req.sanitize(req.body.club),
+        name: req.sanitize(req.body.name)
     }
     
     let status = {task: "complete"};
-    
+    console.log(data);
     IDEA.create(data, (err, created)=>{
        if (err){ 
             status.task = "error";
@@ -32,12 +33,13 @@ router.post("/idea/submission/", (req,res)=>{
             status.task = "NOT OK";
         res.json(status);
     });
+    
 });
 
 //to fetch list of idea from db
 router.get("/idea/list/", (req,res)=>{
     let response = {"status": "OK", list: []};
-    IDEA.findMany({}, "name title club ideaId", (err, ideaList)=>{
+    IDEA.find({}, "name title club ideaId", (err, ideaList)=>{
        if  (err)
        {
            response.status = "ERROR";
@@ -56,13 +58,15 @@ router.get("/idea/:ideaId/", (req,res)=>{
     
     const ideaID  = req.params.ideaId;
     
-    IDEA.find({ideaId: ideaID} , "name title club desc",(err, ideaGet)=>{
+    IDEA.find({ideaId: ideaID} , "name title desc",(err, ideaGet)=>{
        if  (err)
        {
            response.status = "ERROR";
            throw err;
-       }if (ideaGet)
+       }if (ideaGet){
+            ideaGet._id  = " ";
             response.idea = ideaGet;
+       }
         res.json(response);
     }); 
     
