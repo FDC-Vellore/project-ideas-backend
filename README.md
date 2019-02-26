@@ -1,1 +1,1 @@
-# FDC- Vellore <br>Project idea background
+# FDC- Vellor <br>Project idea background

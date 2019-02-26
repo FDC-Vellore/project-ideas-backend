@@ -8,12 +8,6 @@ var IDEA = require("../models/light-lamp.js");
 router.use(sanitizer());
 router.use(compression());
 
-router.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "GET, POST");
-    next();
-});
-
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
@@ -25,8 +19,8 @@ router.post('/idea/submission/', (req,res)=>{
     let data = {
         title: req.sanitize(req.body.title),
         desc: req.sanitize(req.body.desc),
-        name: req.sanitize(req.body.name),
-        email: req.sanitize(req.body.email)
+        email: req.sanitize(req.body.email),
+        name: req.sanitize(req.body.name)
     }
     if(req.body.club != ""){
         data["club"] = req.sanitize(req.body.club);
@@ -50,9 +44,8 @@ router.post('/idea/submission/', (req,res)=>{
 
 //to fetch list of idea from db
 router.get("/idea/list/", (req,res)=>{
-
     let response = {"status": "OK", list: []};
-    IDEA.find({}, "name title ideaId desc", (err, ideaList)=>{
+    IDEA.find({}, "name title desc ideaId", (err, ideaList)=>{
        if  (err)
        {
            response.status = "ERROR";
