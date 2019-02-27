@@ -1,5 +1,5 @@
 const configuration = {
-    mongodbURL : 'mongodb://unknown:16983lravq@ds016148.mlab.com:16148/donthack'
+    mongodbURL : 'enter url here'
 }
 
 module.exports = configuration;
