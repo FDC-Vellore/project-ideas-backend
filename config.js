@@ -1,5 +1,6 @@
+require("dotenv").config();
 const configuration = {
-    mongodbURL : 'enter url here'
-}
+  mongodbURL: process.env.MONGODB_URL
+};
 
 module.exports = configuration;
