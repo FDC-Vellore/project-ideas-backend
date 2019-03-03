@@ -7,6 +7,8 @@ var helmet = require("helmet");
 var mongoose = require("mongoose");
 var compression = require("compression");
 var config = require("./config");
+/*var bunyan = require('bunyan');
+var log = bunyan.createLogger({name: 'fdc-idea'});*/
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
@@ -28,9 +30,9 @@ mongoose.connect(
   { useNewUrlParser: true },
   err => {
     if (err) {
+      //log.warn({erro: err});
       console.error.bind(console, "connection error: ");
     }
-    console.log("Connected to Data Base");
   }
 );
 

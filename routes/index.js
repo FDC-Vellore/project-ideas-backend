@@ -5,6 +5,9 @@ var sanitizer = require("express-sanitizer");
 const requestIp = require("request-ip");
 const _ = require("lodash");
 //var shortId = require("shortid");
+var bunyan = require('bunyan');
+var log = bunyan.createLogger({name: 'fdc-idea'});
+
 var IDEA = require("../models/light-lamp.js");
 
 router.use(sanitizer());
@@ -12,6 +15,7 @@ router.use(compression());
 
 /* GET home page. */
 router.get("/", function(req, res, next) {
+  log.info("Someone Visit");
   res.render("index", { title: "Express" });
 });
 
@@ -32,13 +36,14 @@ router.post("/idea/submission/", (req, res) => {
   }
 
   let status = { task: "complete" };
-  console.log(data);
   IDEA.create(data, (err, created) => {
     if (err) {
       status.task = "error";
+      log.warn({lang: "en"},"IDEA not Submitted");
       throw err;
     }
     if (!created) status.task = "NOT OK";
+    log.info("Submission by "+(data.name));
     res.json(status);
   });
 });
@@ -48,12 +53,14 @@ router.get("/idea/list/", (req, res) => {
   let response = { status: "OK", list: [] };
   IDEA.find({}, "name title desc ideaId", (err, ideaList) => {
     if (err) {
+      log.warn({lang: "en"},"list fetch err");
       response.status = "ERROR";
       throw err;
     }
     if (ideaList) {
       response.list = ideaList;
     }
+    log.info("List fetch");
     res.json(response);
   });
 });
@@ -66,6 +73,7 @@ router.get("/idea/:ideaId/", (req, res) => {
 
   IDEA.find({ ideaId: ideaID }, (err, ideaGet) => {
     if (err) {
+      log.warn({lang: "en"},"detail not fetched");
       response.status = "ERROR";
       throw err;
     }
@@ -73,6 +81,7 @@ router.get("/idea/:ideaId/", (req, res) => {
       ideaGet._id = " ";
       response.idea = ideaGet;
     }
+    log.info("idea fetch");
     res.json(response);
   });
 });
@@ -91,12 +100,15 @@ router.get("/like/idea", (req, res) => {
     { safe: true, new: true }
   )
     .then(response => {
+      log.info("res success");
       return res.send(response);
     })
     .catch(e => {
+      log.warn({lang: "en"}, "res error");
       return res.send({
         message: e.message
       });
     });
 });
+
 module.exports = router;
