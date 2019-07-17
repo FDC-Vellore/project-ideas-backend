@@ -24,7 +24,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 mongoose.connect(
-  config.mongodbURL,
+  process.env.MONGODB_URL,
   { useNewUrlParser: true },
   err => {
     if (err) {
